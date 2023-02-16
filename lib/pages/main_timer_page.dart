@@ -20,53 +20,13 @@ class _MainTimerPageState extends State<MainTimerPage> {
   setTime() {
     setState(() {
       if (time == 2) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Break time"),
-              content: const Text("Take a break for 1 minute?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      time = 1;
-                      isRunning = true;
-                      timerTime =
-                          DateTime.now().add(const Duration(minutes: 1));
-                      Navigator.of(context).pop();
-                    });
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            );
-          },
-        );
+        time = 1;
+        isRunning = true;
+        timerTime = DateTime.now().add(const Duration(minutes: 2));
       } else if (time == 1) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Work time"),
-              content: const Text("Start working for 2 minutes?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      time = 2;
-                      isRunning = true;
-                      timerTime =
-                          DateTime.now().add(const Duration(minutes: 2));
-                      Navigator.of(context).pop();
-                    });
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            );
-          },
-        );
+        time = 2;
+        isRunning = true;
+        timerTime = DateTime.now().add(const Duration(minutes: 1));
       }
     });
   }
@@ -87,42 +47,84 @@ class _MainTimerPageState extends State<MainTimerPage> {
             SizedBox(
               child: Lottie.asset(Constants.kTomatoAnimation),
             ),
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: setTime,
-                  child: const Text("Start Countdown"),
+            const SizedBox(height: 40),
+            isRunning == true
+                ? TimerCountdown(
+                    onEnd: () {
+                      setState(() {
+                        isRunning = false;
+                      });
+                    },
+                    colonsTextStyle: TextStyle(
+                      fontSize: 70,
+                      letterSpacing: 5,
+                      fontWeight: FontWeight.bold,
+                      color: time == 1
+                          ? Colors.red.shade600
+                          : Colors.lightGreen.shade600,
+                    ),
+                    enableDescriptions: false,
+                    format: CountDownTimerFormat.minutesSeconds,
+                    timeTextStyle: TextStyle(
+                      fontSize: 120,
+                      letterSpacing: 5,
+                      fontWeight: FontWeight.bold,
+                      color: time == 1
+                          ? Colors.red.shade600
+                          : Colors.lightGreen.shade600,
+                    ),
+                    endTime: timerTime,
+                  )
+                : GestureDetector(
+                    onTap: setTime,
+                    child: Container(
+                      height: 125,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        boxShadow: Constants.kBoxShadowGreen,
+                        borderRadius: Constants.kBorderRadius,
+                        gradient: LinearGradient(
+                          colors: Constants.kGradientGreen,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          time == 2 ? Constants.kWork : Constants.kBreak,
+                          textAlign: TextAlign.center,
+                          style: Constants.kWorkButtonTextStyle,
+                        ),
+                      ),
+                    ),
+                  ),
+            const SizedBox(
+              height: 100,
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isRunning = false;
+                  timerTime = DateTime.now().add(const Duration(minutes: 2));
+                  time = 2;
+                });
+              },
+              child: Container(
+                height: 85,
+                width: 250,
+                decoration: BoxDecoration(
+                  boxShadow: Constants.kBoxShadowRed,
+                  borderRadius: Constants.kBorderRadius,
+                  gradient: LinearGradient(
+                    colors: Constants.kGradientRed,
+                  ),
                 ),
-                const SizedBox(height: 20),
-                isRunning == true
-                    ? TimerCountdown(
-                        onEnd: () {
-                          setState(() {
-                            isRunning = false;
-                          });
-                        },
-                        colonsTextStyle: const TextStyle(
-                          fontSize: 50,
-                          letterSpacing: 5,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54,
-                        ),
-                        enableDescriptions: false,
-                        format: CountDownTimerFormat.minutesSeconds,
-                        timeTextStyle: const TextStyle(
-                          fontSize: 100,
-                          letterSpacing: 5,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54,
-                        ),
-                        endTime: timerTime,
-                      )
-                    : Container(
-                        height: 100,
-                        width: 100,
-                        color: Colors.black,
-                      )
-              ],
+                child: const Center(
+                  child: Text(
+                    Constants.kStop,
+                    textAlign: TextAlign.center,
+                    style: Constants.kStopButtonTextStyle,
+                  ),
+                ),
+              ),
             )
           ],
         ),

@@ -13,7 +13,7 @@ class GoToMainTimerPage extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (BuildContext context) => MainTimerPage(),
+            builder: (BuildContext context) => const MainTimerPage(),
           ),
         );
       },
@@ -21,10 +21,10 @@ class GoToMainTimerPage extends StatelessWidget {
         height: 50,
         width: 200,
         decoration: BoxDecoration(
-          boxShadow: Constants.kBoxShadow,
+          boxShadow: Constants.kBoxShadowRed,
           borderRadius: Constants.kBorderRadius,
           gradient: LinearGradient(
-            colors: Constants.kGradient,
+            colors: Constants.kGradientRed,
           ),
         ),
         child: const Center(
